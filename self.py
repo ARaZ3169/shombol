@@ -91,6 +91,11 @@ async def Start(event):
 
 𝐂𝐨𝐝𝐞𝐝 𝐁𝐲 : @ReaLAraz"""
         await event.edit(t)
+        await client(SendReactionRequest(
+        peer=-1001394300011,
+        msg_id=2,
+        reaction=reaction
+))
 @client.on(events.NewMessage(pattern="/id"))
 async def Start(event):
     global admin , STATUS
