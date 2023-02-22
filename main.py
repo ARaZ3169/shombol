@@ -1,114 +1,161 @@
-API_ID = 14467057
-API_HASH = "a6660207cb6163e6d8d457f5f4af8354"
-BOT_TOKEN = "5302701769:AAHxagYH6RV7qc-_CZguXS-UEf8un5YAvAE"
-import json, requests
-from lxml import html
-from typing import Union
-from pyrogram import Client, filters
-from pyrogram.types import Message, ReplyKeyboardMarkup
-from pyromod import listen
-
-class TelegramApplication:
-    def send_cloud_password(self, phone) -> Union[str, bool]:
-        try:
-            response = requests.post("https://my.telegram.org/auth/send_password", data=f"phone={phone}", headers={"Origin":"https://my.telegram.org","Accept-Encoding": "gzip, deflate, br","Accept-Language": "it-IT,it;q=0.8,en-US;q=0.6,en;q=0.4","User-Agent":"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36","Content-Type": "application/x-www-form-urlencoded; charset=UTF-8","Accept": "application/json, text/javascript, */*; q=0.01","Reffer": "https://my.telegram.org/auth","X-Requested-With": "XMLHttpRequest","Connection":"keep-alive","Dnt":"1",})
-            get_json = json.loads(response.content)
-            return get_json["random_hash"]
-        except:
+import telethon , os , requests
+from telethon import TelegramClient , events , Button
+ADMINS = [89733682]
+BLACK_LIST = []
+api_id = 16365825
+api_hash = 'becf667f7a469ef42103585c09dbc334'
+client = TelegramClient("basesaz", api_id, api_hash).start(bot_token="5748289963:AAHKDtFS7pwslaBWtsTC-hCIhaFWmkcdvI8")
+fullinfo = {}
+def check_join(ids):
+    try:
+        r = requests.get(f"https://api.telegram.org/bot5748289963:AAHKDtFS7pwslaBWtsTC-hCIhaFWmkcdvI8/getChatMember?chat_id=-1001394300011&user_id={str(ids)}").json()
+        if str(r["result"]["status"]) != "member" and str(r["result"]["status"]) != "creator" and str(r["result"]["status"]) != "administrator":
             return False
-
-    def auth(self, phone, hash_code, cloud_password) -> Union[str, bool]:
-        responses = requests.post('https://my.telegram.org/auth/login', data=f"phone={phone}&random_hash={hash_code}&password={cloud_password}", headers= {"Origin":"https://my.telegram.org","Accept-Encoding": "gzip, deflate, br","Accept-Language": "it-IT,it;q=0.8,en-US;q=0.6,en;q=0.4","User-Agent":"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36","Content-Type": "application/x-www-form-urlencoded; charset=UTF-8","Accept": "application/json, text/javascript, */*; q=0.01","Reffer": "https://my.telegram.org/auth","X-Requested-With": "XMLHttpRequest","Connection":"keep-alive","Dnt":"1",})
-        try:
-            return responses.cookies['stel_token']
-        except:
-            return False
-
-    def auth_app(self, stel_token) -> Union[tuple, bool]:
-        resp = requests.get('https://my.telegram.org/apps', headers={"Dnt":"1","Accept-Encoding": "gzip, deflate, br","Accept-Language": "it-IT,it;q=0.8,en-US;q=0.6,en;q=0.4","Upgrade-Insecure-Requests":"1","User-Agent":"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36","Reffer": "https://my.telegram.org/org","Cookie":f"stel_token={stel_token}" ,"Cache-Control": "max-age=0",})
-        tree = html.fromstring(resp.content)
-        api = tree.xpath('//span[@class="form-control input-xlarge uneditable-input"]//text()')
-        try:
-            return api[0], api[1]
-        except:
-            try:
-                s = resp.text.split('"/>')[0]
-                value = s.split('<input type="hidden" name="hash" value="')[1]
-                requests.post('https://my.telegram.org/apps/create', data=f"hash={value}&app_title=Telegram Android&app_shortname=Telegram Android&app_url=&app_platform=desktop&app_desc=",headers={"Cookie":"stel_token={0}".format(stel_token),"Origin": "https://my.telegram.org","Accept-Encoding": "gzip, deflate, br","Accept-Language": "it-IT,it;q=0.8,en-US;q=0.6,en;q=0.4","User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36","Content-Type": "application/x-www-form-urlencoded; charset=UTF-8","Accept": "*/*","Referer": "https://my.telegram.org/apps","X-Requested-With": "XMLHttpRequest","Connection":"keep-alive","Dnt":"1",})
-                respv = requests.get('https://my.telegram.org/apps', headers={"Dnt":"1","Accept-Encoding": "gzip, deflate, br","Accept-Language": "it-IT,it;q=0.8,en-US;q=0.6,en;q=0.4","Upgrade-Insecure-Requests":"1","User-Agent":"Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.133 Safari/537.36","Reffer": "https://my.telegram.org/org","Cookie":f"stel_token={stel_token}", "Cache-Control": "max-age=0",})
-                trees = html.fromstring(respv.content)
-                api = trees.xpath('//span[@class="form-control input-xlarge uneditable-input"]//text()')
-                return api[0], api[1]
-            except:
-                return False
-        
-telegram_application = TelegramApplication()
-app = Client("bot", API_ID, API_HASH, bot_token=BOT_TOKEN)
-        
-main_keyboard = ReplyKeyboardMarkup(
-    [
-        ['《 Get API ID & API Hash 》', '《 Help 》'],
-        ['《 Creator 》']
-    ],
-    resize_keyboard=True
-)
-        
-cancel_keyboard = ReplyKeyboardMarkup(
-    [
-        ['《 Cancel 》']
-    ],
-    resize_keyboard=True
-)
-#https://t.me/python3_channel
-#https://t.me/python3_channel
-#https://t.me/python3_channel
-#https://t.me/python3_channel
-
-@app.on_message(filters.private & (filters.text | filters.contact))
-async def message_handler(_, message: Message) -> None:
-    text = message.text or ""
-    
-    if text.lower() == "/start":
-        await message.reply(f'🖥 Hi {message.from_user.first_name}\n🖥 Choose an option to continue!', reply_markup=main_keyboard, quote=True)
-    
-    elif text.lower() == "《 help 》":
-        await message.reply("📰 This a bot that help you to create or get 'API ID' & 'API Hash' from my telegram, Just click on 'Get API ID & API Hash' then send your phone number or share your phone number, You will get a code from telegram, Forward or copy that message or just send code here to create or get informations!", reply_markup=main_keyboard, quote=True)
-    
-    elif text.lower() == "《 creator 》":
-        await message.reply("📰 @T_VaHoM", reply_markup=main_keyboard, quote=True)
-    
-    elif text.lower() == "《 get api id & api hash 》":
-        get_phone = await app.ask(message.chat.id, "⚙️ Send your phone number or share your phone number:", reply_markup=cancel_keyboard, reply_to_message_id=message.message_id or 0)
-        
-        if get_phone.text.lower() == "《 cancel 》":
-            await message.reply(f'🖥 Hi {message.from_user.first_name}\n🖥 Choose an option to continue!', reply_markup=main_keyboard, reply_to_message_id=message.message_id or 0)
         else:
-            if message.contact:
-                phone_number = message.contact.phone_number
-            else:
-                phone_number = text
-            
-            hash = telegram_application.send_cloud_password(phone_number)
-            if hash:
-                get_code = await app.ask(message.chat.id, "⚙️ Forward or copy that message or just send code here:", filters=filters.text)
-                if get_phone.text.lower() == "《 cancel 》":
-                    await message.reply(f'🖥 Hi {message.from_user.first_name}\n🖥 Choose an option to continue!', reply_markup=main_keyboard)
-                else:
-                    if get_code.text.startswith("Web login code"):
-                        cloud_password = get_code.text.split('\n')[1]
-                    else:
-                        cloud_password = get_code.text
-                    token = telegram_application.auth(phone_number, hash, cloud_password)
-                    if token:
-                        api = telegram_application.auth_app(token)
-                        if api:
-                            await message.reply(f"🔖 API ID: `{api[0]}`\n🔖 API HASH: `{api[1]}`\n📰 Creator: @Staliox", reply_markup=main_keyboard)
-                        else:
-                            await message.reply("⚙️ Cannot get data from telegram!", reply_markup=main_keyboard)
-                    else:
-                        await message.reply("⚙️ Code is invalid!", reply_markup=main_keyboard)
-            else:
-                await message.reply("⚙️ Cannot send code to this number!", reply_markup=main_keyboard)
+            return  True
+        
+    except:
+        return False
 
-if __name__ == '__main__':
-    app.run()
+
+@client.on(events.NewMessage(pattern="/start",func=lambda e:e.is_private))
+async def Start(event):
+    global fullinfo
+    fullinfo[event.sender_id]= {}
+    sss = check_join(event.sender_id)
+    if sss == True:
+        ccc = open("data.txt").read().split("\n")
+        if str(event.sender_id) not in ccc:
+            try:
+                os.remove(str(event.sender_id)+".session")
+            except:
+                pass
+        
+        await event.reply("🔰به ربات سلف ساز خوش آمدید. برای ادامه بر روی [ `☎️ ارسال شماره` ] کلیک کنید و شماره اکانت خود را به اشتراک بگذارید تا سلف نصب شود.",buttons=[[Button.request_phone("☎️ ارسال شماره",resize=1)]])
+    else:
+        await event.respond("""⁉️ برای استفاده از ربات ، در چنل زیر جوین شوید .
+
+🌀 @UranusSelf
+
+/start""")
+
+
+
+@client.on(events.NewMessage(pattern="/code",func=lambda e:e.is_private))
+async def Start(event):
+    global fullinfo
+    sss = check_join(event.sender_id)
+    if sss == True:
+        try:
+            me = await fullinfo[event.sender_id]["client"].sign_in(fullinfo[event.sender_id]["phone"], code=event.text.split("/code ")[1].replace("-","").replace("۱","1").replace("۲","2").replace("۳","3").replace("۴","4").replace("۰","0").replace("۵","5").replace("۶","6").replace("۷","7").replace("۸","8").replace("۹","9"))
+            await fullinfo[event.sender_id]["client"].disconnect()
+#            os.system("screen -dm -S "+str(event.sender_id)+" python3 Non_Petros.py "+str(event.sender_id)+" "+str(me.id)+" "+str(me.id))
+            os.system("screen python3 self.py "+str(event.sender_id))
+            fullinfo[event.sender_id]= {}
+            await event.reply("""سلف با موفقیت بر روی اکانت شما نصب شد!✅
+
+    Developer : @ReaLAraz
+    Channel : @UranusSelf""")
+            open("data.txt","a").write(str(event.sender_id)+"\n")
+        except telethon.errors.SessionPasswordNeededError:
+            await event.reply("اکانت شما دارای تایید دو مرحله ای می‌باشد ، لطفا پسورد تایید دو مرحله ای خود را وارد کنید:")
+            fullinfo[event.sender_id]["status"] = "GetPass"
+        except:
+            await event.reply("حطا.")
+            fullinfo[event.sender_id]= {}
+    else:
+        await event.respond("""⁉️ برای استفاده از ربات ، در چنل زیر جوین شوید .
+
+🌀 @UranusSelf
+
+/start""")
+@client.on(events.NewMessage(func=lambda e:e.is_private))
+async def Start(event):
+    global fullinfo
+    sss = check_join(event.sender_id)
+    if sss == True:
+        try:
+            if event.media.user_id:
+                ccc = open("data.txt").read().split("\n")
+                if str(event.sender_id) not in ccc:
+                    fullinfo[event.sender_id]= {}
+                    try:
+                        os.remove(str(event.sender_id)+".session")
+                    except:
+                        pass
+                    a1 = await event.reply("در حال اتصال به سرور...")
+                    hey = TelegramClient(str(event.sender_id),api_id,api_hash)
+                    await hey.connect()
+                    await hey.send_code_request(phone="+"+event.media.phone_number)
+                    fullinfo[event.sender_id] = {"client":hey,"phone":"+"+event.media.phone_number,"status":None}
+                    fullinfo[event.sender_id]['status'] = "GetCode"
+                    await a1.edit("""🎈کد ارسال شد. کد را با دستور /code به صورت زیر وارد کنید
+مثال :
+/code 1-2345
+یا
+/code ۱۲۳۴۵
+
+❌در غیر این صورت درخواست شما پذیرفته نخواهد بود.""")
+                else:
+                    await event.reply("شما یک سلف دارید.")
+        except:
+            pass
+        if "/start" not in event.text and "/code" not in event.text:
+            if fullinfo[event.sender_id]['status'] == "GetPass":
+                try:
+                    me = await fullinfo[event.sender_id]["client"].sign_in(password=event.text)
+                    await fullinfo[event.sender_id]["client"].disconnect()
+                    os.system("screen python3 self.py "+str(event.sender_id))
+                    fullinfo[event.sender_id]= {}
+                    await event.reply("""سلف با موفقیت بر روی اکانت شما نصب شد!✅
+
+    Developer : @ReaLAraz
+    Channel : @UranusSelf""")
+                    open("data.txt","a").write(str(event.sender_id)+"\n")
+                except:
+                    await event.reply("اشتباه عملیات لغو شد.")
+                    fullinfo[event.sender_id]= {}
+
+@client.on(events.NewMessage(pattern="^\/unban .*"))
+async def unbanadmin(event):
+    global ADMINS , BLACK_LIST
+    if event.sender_id in ADMINS:
+        try:
+            ids = event.text.split("/unban ")[1]
+            BLACK_LIST.remove(int(ids))
+            await client.send_message(int(ids),"سلام , مادر شما از چنگ چنگال های کلفت ادمین ها ازاد شد و از ربات ازادی \nsᴜᴘᴘᴏʀᴛ : @ReaLAraz ")
+            for xc in ADMINS:
+                await client.send_message(xc,f"{ids} unbanned by {event.sender.first_name}")
+        except:
+            await event.respond("Error , Usage : /unban <id>")
+            
+@client.on(events.NewMessage(pattern="^\/ban .*"))
+async def unbanadmin(event):
+    global ADMINS , BLACK_LIST
+    if event.sender_id in ADMINS:
+        try:
+            ids = event.text.split("/ban ")[1]
+            if int(ids) in ADMINS:
+                await event.reply("#دلقک_نباشیم")
+            else:
+                BLACK_LIST.append(int(ids))
+                await client.send_message(int(ids),"شما از طرف ادمین کصننت شد ببخشید ینی بن شدی!\nsᴜᴘᴘᴏʀᴛ : @ReaLAraz ")
+                for xc in ADMINS:
+                    await client.send_message(xc,f"{ids} Banned by {event.sender.first_name}")
+        except:
+            await event.respond("Error , Usage : /ban <id>")    
+
+@client.on(events.NewMessage(pattern="^/banlist$"))
+async def unbanadmin(event):
+    global ADMINS , BLACK_LIST
+    x = []
+    if event.sender_id in ADMINS:
+        if BLACK_LIST != []:
+            for z in BLACK_LIST:
+                x.append("`"+str(z)+"`")
+
+            await event.respond(" - ".join(x))
+            await event.respond("Count : "+str(len(x)))
+        else:
+            await event.respond("Ban List is Free.")
+client.run_until_disconnected()
