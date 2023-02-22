@@ -1,7 +1,7 @@
 from telethon.sync import TelegramClient , events , Button
 import time , requests , os , random , sys
 from urllib.parse import urlparse
-#from telethon.tl.functions.messages import SendReactionRequest
+from telethon.tl.functions.messages import SendReactionRequest
 import emoji
 import asyncio , aiocron , pytz , time
 from telethon.tl import functions
@@ -14,7 +14,7 @@ with TelegramClient(sys.argv[1], api_id, api_hash) as client:
    client.send_message('me', "✅ با موفقیت سلف روی اکانت شما ران شد میتوانید با ارسال پیام\n`/help`\nکامند های ربات رو دریافت کنید با تشکر سازنده ربات آراز\n\n🆔 @ReaLAraz")
 #   print(client.download_profile_photo('me'))
 print("         Self Runned")
-AdminBot = 89733682 # آیدی عددی اکانتی که میخاید ران کنید
+AdminBot = sys.argv[1] # آیدی عددی اکانتی که میخاید ران کنید
 main = '9876543210'
 fonts = ['９８７６５４３２１０']
 heart = ['🖤','💜','💙','💚','💛','🧡','❤','🤍',]
