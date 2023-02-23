@@ -558,7 +558,7 @@ async def timename_on(event):
 @client.on(events.NewMessage())
 async def timename_off(event):
     text = (event.raw_text)
-    if (text == "/timename on" and event.sender_id == AdminBot):
+    if (text == "/timename off" and event.sender_id == AdminBot):
         await event.edit(f'**Time Name Is [DeActived](tg://user?id={AdminBot}) !**')
         clockname.stop()
 
