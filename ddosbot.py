@@ -2,6 +2,7 @@ from pyrogram import Client
 from pyrogram.types import *
 import subprocess
 import socket , random
+import types , enums , idle
 api_id = 11556589
 api_hash = '551b36edf3dabde0eb4d5085269353a0'
 bot = Client("ddoserbot", api_id, api_hash)
@@ -34,4 +35,4 @@ async def test(client , message):
         await bot.send_message(message.chat.id , f"Creator : @RealAraz")
     else:
         await bot.send_message(message.chat.id, f"⚠︎ Error..!")
-bot.start(), print("bot is online")
+bot.start(), print("bot is online"),idle(), bot.stop()
